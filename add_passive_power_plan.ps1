@@ -38,17 +38,16 @@ if ($null -eq $NewPlanGUID) {
 }
 
 Write-Output "New power plan created with GUID: $NewPlanGUID"
-Start-Process -FilePath "powercfg.exe" -ArgumentList "-changename", "$NewPlanGUID", "$PowerPlanName"
+cmd /c "powercfg -changename $NewPlanGUID $PowerPlanName"
 Write-Output "Power plan name changed to: $PowerPlanName"
 
 # Set additional custom settings for the "Passive" power plan
 #===========================================================
 # Set max CPU frequency on DC to 1900MHz
-#powercfg -setdcvalueindex $NewPlanGUID SUB_PROCESSOR PROCFREQMAX $CpuMaxFreqDC
-Start-Process -FilePath "powercfg.exe" -ArgumentList "-setdcvalueindex", "$NewPlanGUID", "SUB_PROCESSOR", "PROCFREQMAX", "$CpuMaxFreqDC"
+cmd /c "powercfg -setdcvalueindex $NewPlanGUID SUB_PROCESSOR PROCFREQMAX $CpuMaxFreqDC"
 # Set max CPU frequency on AC to 2300MHz
-Start-Process -FilePath "powercfg.exe" -ArgumentList "-setacvalueindex", "$NewPlanGUID", "SUB_PROCESSOR", "PROCFREQMAX", "$CpuMaxFreqAC"
+cmd /c "powercfg -setacvalueindex $NewPlanGUID SUB_PROCESSOR PROCFREQMAX $CpuMaxFreqAC"
 
 # Set parked CPU cores to 50% for both AC and DC
-Start-Process -FilePath "powercfg.exe" -ArgumentList "-setdcvalueindex", "$NewPlanGUID", "SUB_PROCESSOR", "CPMINCORES", "$CpuParkedCoresDC"
-Start-Process -FilePath "powercfg.exe" -ArgumentList "-setacvalueindex", "$NewPlanGUID", "SUB_PROCESSOR", "CPMINCORES", "$CpuParkedCoresAC"
+cmd /c "powercfg -setdcvalueindex $NewPlanGUID SUB_PROCESSOR CPMINCORES $CpuParkedCoresDC"
+cmd /c "powercfg -setacvalueindex $NewPlanGUID SUB_PROCESSOR CPMINCORES $CpuParkedCoresAC"
